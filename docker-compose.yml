@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  binance:
+    build: ./docker/bot
+    environment:
+      - NODE_TYPE=binance
+      - QNAME=sub
+      - QHOST=rabbit
+    volumes:
+      - ./rialtows:/project
+    depends_on:
+      - 'sub'
+
+  okex:
+    build: ./docker/bot
+    environment:
+      - NODE_TYPE=okex
+      - QNAME=sub
+      - QHOST=rabbit
+    volumes:
+      - ./rialtows:/project
+    depends_on:
+      - 'sub'
+
+  sub:
+    build: ./docker/bot
+    environment:
+      - NODE_TYPE=sub
+      - QNAME=sub
+      - QHOST=rabbit
+    volumes:
+      - ./rialtows:/project
+    depends_on:
+      - 'rabbit'
+
+
+  rabbit:
+    build: ./docker/amqp
+    ports:
+      - "5672:5672"
+      - "5671:5671"
